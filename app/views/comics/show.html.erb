@@ -1,0 +1,51 @@
+<div>
+  <%= image_tag @comic.get_image %>
+  <p>ショップ名：<%= @comic.shop_name %></p>
+  <p>説明：<%= @comic.caption %></p>
+  <p>投稿ユーザー画像：
+  <% if @comic.user.present? %>
+    <%= image_tag @comic.user.get_profile_image(100,100) %>
+  <% else %>
+    <%= image_tag 'default-user.png', width: 100, height: 100 %>  <no_image.jpg>
+  <% end %>
+</p>
+  <p>ユーザーネーム：<%= @comic.user.name %></p>
+  <p>投稿日：<%= @comic.created_at.strftime('%Y/%m/%d') %></p>
+
+  <% if @comic.user == current_user %>
+    <%= link_to "削除", comic_path(@comic), method: :delete %>
+  <% end %>
+
+  <% if current_user && @comic.favorited_by?(current_user) %>
+    <p>
+      <%= link_to comic_favorite_path(@comic), method: :delete do %>
+        ♥<%= @comic.favorites.count %> いいね
+      <% end %>
+    </p>
+    <% else %>
+    <p>
+      <%= link_to comic_favorite_path(@comic), method: :post do %>
+        ♡<%= @comic.favorites.count %> いいね
+      <% end %>
+    </p>
+  <% end %>
+</div>
+
+<div>
+  <p>コメント件数：<%= @comic.comic_reviews.count %></p>
+  <% @comic.comic_reviews.each do |comic_review| %>
+    <p><%= image_tag comic_review.user.get_profile_image(100,100) %></p>
+    <%= comic_review.user.name %>
+    <%= comic_review.created_at.strftime('%Y/%m/%d') %><%= comic_review.comment %>
+    <% if comic_review.user == current_user %>
+      <%= link_to "削除", comic_review_path(comic_review.comic, comic_review), method: :delete %>
+    <% end %>
+    
+  <% end %>
+</div>
+<div>
+  <%= form_with model: [@comic, @comic_review] do |f| %>
+    <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
+    <%= f.submit "送信する" %>
+  <% end %>
+</div>
