@@ -17,7 +17,7 @@ gem 'simple_form'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'rspec-rails', '~> 5.0'
+  gem 'rspec-rails', '~> 8.0'
   gem 'factory_bot_rails'
 end
 
